@@ -21,4 +21,9 @@ procedure SEND_MAIL(
 function get_comments(p_gl_id number) return clob;
 
 procedure add_comments(p_gl_id number, p_comment varchar2);
+
+procedure send_daily_newsleter;
+
+function get_daily_newsleter(p_day date, p_login varchar2) return clob;
+
 end;

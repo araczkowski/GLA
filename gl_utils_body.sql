@@ -47,7 +47,8 @@ APEX_UTIL.CREATE_USER(
        p_from      => 'info@sviete.pl',
        p_subj      => 'Witamy w Santa v2015 system',
        p_body      => ' ',
-       p_body_html => l_body);
+       p_body_html => l_body,
+       p_replyto   => 'info@sviete.pl');
 
 
     end;
@@ -57,17 +58,18 @@ procedure SEND_MAIL(
        p_from      varchar2,
        p_subj      varchar2,
        p_body_html varchar2) is
-
-           l_id number;
+       l_id number;
 
 begin
 
   l_id := APEX_MAIL.SEND(
        p_to        => p_to,
-       p_from      => p_from,
+       p_from      => 'noreply@sviete.pl',
+       p_replyto   => p_from,
        p_subj      => p_subj,
        p_body      => '',
        p_body_html => p_body_html);
+
 
  end;
 
@@ -101,6 +103,119 @@ begin
     insert into gl_comment(POMYSL_ID,DODAL,DATA_DODANIA,TEKST)
     values (p_gl_id,v('APP_USER'),sysdate,p_comment);
     --
+end;
+
+--
+function get_daily_newsleter(p_day date, p_login varchar2) return clob is
+l_body clob;
+l_dodane varchar2(32767);
+l_skomentowane varchar2(32767);
+l_dni number;
+l_dzien_char varchar2(40);
+l_dodane_wszystkie varchar2(32767);
+begin
+
+l_dzien_char := to_char(p_day-1,'DD/MM/YYYY');
+
+for rec in (select gl.dodal, count(1) ile from gift_list gl
+            where trunc(gl.data_dodania) = trunc(p_day-1)
+            group by gl.dodal
+            order by 2 desc ) loop
+
+ if length(l_dodane) = 0 then
+     l_dodane := '<ul>';
+ end if;
+
+ l_dodane := l_dodane || '<li>' || rec.dodal || ' => '|| rec.ile ||'</li>';
+end loop;
+
+if length(l_dodane) > 0 then
+     l_dodane := l_dodane || '</ul>';
+ end if;
+
+--
+
+for rec in (select c.dodal, count(1) ile from gl_comment c
+ where trunc(c.data_dodania) = trunc(p_day-1)
+group by c.dodal
+order by 2 desc ) loop
+
+ if length(l_skomentowane) = 0 then
+     l_skomentowane := '<ul>';
+ end if;
+
+ l_skomentowane := l_skomentowane || '<li>' || rec.dodal || ' => '|| rec.ile ||'</li>';
+end loop;
+
+if length(l_skomentowane) > 0 then
+     l_skomentowane := l_skomentowane || '</ul>';
+ end if;
+
+ --
+ select trunc(e.data) - trunc(p_day) into l_dni
+ from gl_events e
+ where nazwa = 'PreWIGILIA 2015';
+
+ --
+
+ l_dodane_wszystkie := '<ol>';
+ for rec in (select gl.dodal, count(1) ile from gift_list gl
+            where impreza = 'PreWIGILIA 2015'
+            group by gl.dodal
+            order by 2 desc ) loop
+
+            l_dodane_wszystkie := l_dodane_wszystkie || '<li>' || rec.dodal || ' => '|| rec.ile ||'</li>';
+ end loop;
+ l_dodane_wszystkie := l_dodane_wszystkie || '</ol>';
+
+ l_body := l_body || '<meta http-equiv="Content-Type"  content="text/html charset=UTF-8" />';
+
+
+
+
+
+ l_body := l_body || '<div>';
+ l_body := l_body || '<p style="font-size:xx-large;font-weight:bolder;margin-bottom: 0px;">santa<span style="color:red">news</span>letter</p>';
+ l_body := l_body || '<p style="margin-top:0px;font-size:small">Issue #1 // '|| to_char(p_day, 'Month dd, YYYY') || ' // Santa ' || p_login || '</p>';
+ l_body := l_body || '<hr style="border-top: dotted 1px;" /><br>';
+
+
+
+
+
+ l_body := l_body || '<p>#<span style="font-weight:bolder; color:red">POMYSŁY NA PREZENTY</span> dodane w dniu '||l_dzien_char||': </p>' || l_dodane;
+ l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
+
+ l_body := l_body || '<p>#<span style="font-weight:bolder; color:red">KOMENTARZE</span> dodane w dniu'||l_dzien_char||': </p>' || l_skomentowane;
+ l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
+
+ l_body := l_body || '<p>#<span style="font-weight:bolder; color:red">Mikołaj''s toplist:</span>'||l_dodane_wszystkie;
+ l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
+
+ l_body := l_body || '<h5 style="margin-bottom: 0px;">Do PreWIGILIA 2015 zostało już tylko '||l_dni|| 'dni!</h5>';
+ l_body := l_body || '<a style="font-size: small;" href="https://apex.oracle.com/pls/apex/f?p=GLA">Santa v2015 system</a>';
+
+
+
+ return l_body;
+end;
+
+
+--
+procedure send_daily_newsleter is
+l_body clob;
+begin
+
+
+for rec in (select * from gl_users where newsletter = 1) loop
+
+ l_body := get_daily_newsleter(sysdate, rec.login);
+
+ SEND_MAIL(rec.email,'info@sviete.pl','Ho Ho Ho! Mikołaju '|| rec.login || '! Twój Mikołajowy Newsletter '||to_char(sysdate,'DD/MM/YYYY'), l_body);
+
+
+end loop;
+
 end;
 
 
