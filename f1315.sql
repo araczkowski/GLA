@@ -27,7 +27,7 @@ prompt APPLICATION 1315 - Gift List App
 -- Application Export:
 --   Application:     1315
 --   Name:            Gift List App
---   Date and Time:   14:31 Tuesday November 17, 2015
+--   Date and Time:   13:07 Friday November 20, 2015
 --   Exported By:     ARACZKOWSKI@GMAIL.COM
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -36,12 +36,12 @@ prompt APPLICATION 1315 - Gift List App
 --
 
 -- Application Statistics:
---   Pages:                     16
---     Items:                   61
---     Computations:             3
---     Validations:              2
---     Processes:               29
---     Regions:                 31
+--   Pages:                     17
+--     Items:                   63
+--     Computations:             4
+--     Validations:              5
+--     Processes:               30
+--     Regions:                 35
 --     Buttons:                 29
 --     Dynamic Actions:          8
 --   Shared Components:
@@ -49,7 +49,7 @@ prompt APPLICATION 1315 - Gift List App
 --     Navigation:
 --       Lists:                  4
 --       Breadcrumbs:            1
---         Entries:              8
+--         Entries:              9
 --       NavBar Entries:         2
 --     Security:
 --       Authentication:         1
@@ -122,7 +122,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_IN_NOTIFICATION'
 ,p_last_updated_by=>'ARACZKOWSKI@GMAIL.COM'
-,p_last_upd_yyyymmddhh24miss=>'20151117122412'
+,p_last_upd_yyyymmddhh24miss=>'20151120124933'
 ,p_email_from=>'info@sviete.pl'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
@@ -184,6 +184,15 @@ wwv_flow_api.create_list_item(
 ,p_list_item_icon=>'fa-birthday-cake'
 ,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
 ,p_list_item_current_for_pages=>'8,9'
+);
+wwv_flow_api.create_list_item(
+ p_id=>wwv_flow_api.id(17925688750288654046)
+,p_list_item_display_sequence=>150
+,p_list_item_link_text=>'Newsletter'
+,p_list_item_link_target=>'f?p=&APP_ID.:12:&SESSION.::&DEBUG.::::'
+,p_list_item_icon=>'fa-newspaper-o'
+,p_list_item_current_type=>'COLON_DELIMITED_PAGE_LIST'
+,p_list_item_current_for_pages=>'12'
 );
 wwv_flow_api.create_list_item(
  p_id=>wwv_flow_api.id(13297407557704851170)
@@ -733,6 +742,13 @@ wwv_flow_api.create_menu_option(
 ,p_short_name=>'eMail'
 ,p_link=>'f?p=&APP_ID.:13:&SESSION.::&DEBUG.:::'
 ,p_page_id=>13
+);
+wwv_flow_api.create_menu_option(
+ p_id=>wwv_flow_api.id(17925689596541654050)
+,p_parent_id=>wwv_flow_api.id(53916838307059860196)
+,p_short_name=>'Newsletter'
+,p_link=>'f?p=&APP_ID.:12:&SESSION.'
+,p_page_id=>12
 );
 wwv_flow_api.create_menu_option(
  p_id=>wwv_flow_api.id(53916838307059860196)
@@ -21158,12 +21174,12 @@ wwv_flow_api.create_page(
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
 ,p_last_updated_by=>'ARACZKOWSKI@GMAIL.COM'
-,p_last_upd_yyyymmddhh24miss=>'20150926085810'
+,p_last_upd_yyyymmddhh24miss=>'20151117222451'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(13397776689672207445)
 ,p_plug_name=>'Zmiana hasła'
-,p_icon_css_classes=>'fa fa-image fa-5x'
+,p_icon_css_classes=>'fa fa-user fa-5x'
 ,p_region_template_options=>'#DEFAULT#'
 ,p_plug_template=>wwv_flow_api.id(335216310242312145)
 ,p_plug_display_sequence=>10
@@ -21187,31 +21203,31 @@ wwv_flow_api.create_page_plug(
 ,p_attribute_02=>'TEXT'
 ,p_attribute_03=>'Y'
 );
-wwv_flow_api.create_page_button(
- p_id=>wwv_flow_api.id(13397777017790207445)
-,p_button_sequence=>10
-,p_button_plug_id=>wwv_flow_api.id(13397777325306207446)
-,p_button_name=>'CANCEL'
-,p_button_action=>'DEFINED_BY_DA'
-,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft'
-,p_button_template_id=>wwv_flow_api.id(335258574839312359)
-,p_button_image_alt=>'Anuluj'
-,p_button_position=>'REGION_TEMPLATE_CLOSE'
-,p_icon_css_classes=>'fa-times'
-,p_grid_new_grid=>false
-,p_grid_new_row=>'N'
-,p_grid_new_column=>'N'
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(17312222063922546131)
+,p_plug_name=>'Biuletyn'
+,p_region_template_options=>'#DEFAULT#:t-Region--scrollBody'
+,p_escape_on_http_output=>'Y'
+,p_plug_template=>wwv_flow_api.id(335216837663312150)
+,p_plug_display_sequence=>50
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_num_rows=>15
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+,p_attribute_03=>'Y'
 );
 wwv_flow_api.create_page_button(
  p_id=>wwv_flow_api.id(13397777187547207445)
 ,p_button_sequence=>20
-,p_button_plug_id=>wwv_flow_api.id(13397777325306207446)
+,p_button_plug_id=>wwv_flow_api.id(13397776689672207445)
 ,p_button_name=>'SUBMIT'
 ,p_button_action=>'SUBMIT'
 ,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft'
 ,p_button_template_id=>wwv_flow_api.id(335258574839312359)
 ,p_button_is_hot=>'Y'
-,p_button_image_alt=>'Zapisz'
+,p_button_image_alt=>'Zapisz nowe hasło'
 ,p_button_position=>'REGION_TEMPLATE_NEXT'
 ,p_icon_css_classes=>'fa-check'
 ,p_grid_new_grid=>false
@@ -21222,7 +21238,6 @@ wwv_flow_api.create_page_button(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(13397779260408207449)
 ,p_name=>'P10_NEW_PASSWORD'
-,p_is_required=>true
 ,p_item_sequence=>10
 ,p_item_plug_id=>wwv_flow_api.id(13397776689672207445)
 ,p_prompt=>'Nowe Hasło '
@@ -21242,7 +21257,6 @@ wwv_flow_api.create_page_item(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(13400351463038572288)
 ,p_name=>'P10_NEW_PASSWORD_2'
-,p_is_required=>true
 ,p_item_sequence=>20
 ,p_item_plug_id=>wwv_flow_api.id(13397776689672207445)
 ,p_prompt=>'Nowe Hasło 2'
@@ -21259,6 +21273,60 @@ wwv_flow_api.create_page_item(
 ,p_attribute_01=>'Y'
 ,p_attribute_02=>'Y'
 );
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(17312757531351763256)
+,p_name=>'P10_NEWSLETTER'
+,p_item_sequence=>30
+,p_item_plug_id=>wwv_flow_api.id(17312222063922546131)
+,p_prompt=>'Chcę otrzymywać codzienne powiadomienia: '
+,p_display_as=>'NATIVE_RADIOGROUP'
+,p_lov=>'STATIC2:Tak;1,Nie;0'
+,p_cSize=>30
+,p_cMaxlength=>4000
+,p_cHeight=>1
+,p_label_alignment=>'RIGHT'
+,p_field_alignment=>'LEFT-CENTER'
+,p_field_template=>wwv_flow_api.id(335257999627312320)
+,p_item_template_options=>'#DEFAULT#'
+,p_lov_display_extra=>'YES'
+,p_attribute_01=>'2'
+,p_attribute_02=>'NONE'
+);
+wwv_flow_api.create_page_computation(
+ p_id=>wwv_flow_api.id(17323905329699946543)
+,p_computation_sequence=>10
+,p_computation_item=>'P10_NEWSLETTER'
+,p_computation_point=>'BEFORE_HEADER'
+,p_computation_type=>'QUERY'
+,p_computation=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+'select NEWSLETTER from gl_users ',
+'where LOGIN = v(''APP_USER'')'))
+);
+wwv_flow_api.create_page_validation(
+ p_id=>wwv_flow_api.id(17323609751174731417)
+,p_validation_name=>'P10_NEW_PASSWORD'
+,p_validation_sequence=>1
+,p_validation=>'P10_NEW_PASSWORD'
+,p_validation_type=>'ITEM_NOT_NULL'
+,p_error_message=>'#LABEL# must have some value.'
+,p_always_execute=>'N'
+,p_when_button_pressed=>wwv_flow_api.id(13397777187547207445)
+,p_only_for_changed_rows=>'Y'
+,p_associated_item=>wwv_flow_api.id(13397779260408207449)
+,p_error_display_location=>'INLINE_WITH_FIELD_AND_NOTIFICATION'
+);
+wwv_flow_api.create_page_validation(
+ p_id=>wwv_flow_api.id(17323611602179734696)
+,p_validation_name=>'P10_NEW_PASSWORD_2'
+,p_validation_sequence=>5
+,p_validation=>'P10_NEW_PASSWORD_2'
+,p_validation_type=>'ITEM_NOT_NULL'
+,p_error_message=>'#LABEL# must have some value.'
+,p_always_execute=>'N'
+,p_when_button_pressed=>wwv_flow_api.id(13397777187547207445)
+,p_only_for_changed_rows=>'Y'
+,p_error_display_location=>'INLINE_WITH_FIELD_AND_NOTIFICATION'
+);
 wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(13400674137846682043)
 ,p_validation_name=>'P10_NEW_PASSWORD'
@@ -21273,21 +21341,39 @@ wwv_flow_api.create_page_validation(
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 );
 wwv_flow_api.create_page_da_event(
- p_id=>wwv_flow_api.id(13397778001813207446)
-,p_name=>'Cancel Dialog'
+ p_id=>wwv_flow_api.id(17312997783254787224)
+,p_name=>'Newsletter'
 ,p_event_sequence=>10
-,p_triggering_element_type=>'BUTTON'
-,p_triggering_button_id=>wwv_flow_api.id(13397777017790207445)
+,p_triggering_element_type=>'ITEM'
+,p_triggering_element=>'P10_NEWSLETTER'
 ,p_bind_type=>'bind'
-,p_bind_event_type=>'click'
+,p_bind_event_type=>'change'
 );
 wwv_flow_api.create_page_da_action(
- p_id=>wwv_flow_api.id(13397778537814207447)
-,p_event_id=>wwv_flow_api.id(13397778001813207446)
+ p_id=>wwv_flow_api.id(17313038111700787226)
+,p_event_id=>wwv_flow_api.id(17312997783254787224)
 ,p_event_result=>'TRUE'
 ,p_action_sequence=>10
 ,p_execute_on_page_init=>'N'
-,p_action=>'NATIVE_DIALOG_CANCEL'
+,p_action=>'NATIVE_EXECUTE_PLSQL_CODE'
+,p_attribute_01=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+'update GL_USERS set NEWSLETTER = :P10_NEWSLETTER',
+'where LOGIN = v(''APP_USER'');',
+'apex_application.g_print_success_message := ''Preferencje dotyczące newslettera zapisano poprawnie.'';',
+''))
+,p_attribute_02=>'P10_NEWSLETTER'
+,p_stop_execution_on_error=>'Y'
+,p_wait_for_result=>'Y'
+);
+wwv_flow_api.create_page_da_action(
+ p_id=>wwv_flow_api.id(17321130775446872310)
+,p_event_id=>wwv_flow_api.id(17312997783254787224)
+,p_event_result=>'TRUE'
+,p_action_sequence=>20
+,p_execute_on_page_init=>'N'
+,p_action=>'NATIVE_SUBMIT_PAGE'
+,p_attribute_01=>'NEWSLETTER'
+,p_attribute_02=>'Y'
 ,p_stop_execution_on_error=>'Y'
 );
 wwv_flow_api.create_page_process(
@@ -21310,8 +21396,8 @@ wwv_flow_api.create_page_process(
 ,p_process_type=>'NATIVE_CLOSE_WINDOW'
 ,p_process_name=>'Close Dialog'
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
-,p_process_when=>'SUBMIT'
-,p_process_when_type=>'REQUEST_IN_CONDITION'
+,p_process_when=>':REQUEST in (''SUBMIT'',''NEWSLETTER'')'
+,p_process_when_type=>'PLSQL_EXPRESSION'
 );
 end;
 /
@@ -21435,6 +21521,217 @@ wwv_flow_api.create_page_process(
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_when_button_id=>wwv_flow_api.id(17185966620742804327)
 ,p_process_success_message=>'Komentarz dodany!'
+);
+end;
+/
+prompt --application/pages/page_00012
+begin
+wwv_flow_api.create_page(
+ p_id=>12
+,p_user_interface_id=>wwv_flow_api.id(53916834827207860036)
+,p_name=>'Newsletter'
+,p_page_mode=>'NORMAL'
+,p_step_title=>'Newsletter'
+,p_step_sub_title_type=>'TEXT_WITH_SUBSTITUTIONS'
+,p_first_item=>'NO_FIRST_ITEM'
+,p_page_template_options=>'#DEFAULT#'
+,p_dialog_chained=>'Y'
+,p_overwrite_navigation_list=>'N'
+,p_page_is_public_y_n=>'N'
+,p_cache_mode=>'NOCACHE'
+,p_help_text=>'No help is available for this page.'
+,p_last_updated_by=>'ARACZKOWSKI@GMAIL.COM'
+,p_last_upd_yyyymmddhh24miss=>'20151120121343'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(17925689253064654049)
+,p_plug_name=>'Breadcrumb'
+,p_region_template_options=>'#DEFAULT#:t-BreadcrumbRegion--useBreadcrumbTitle'
+,p_component_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(335223897360312165)
+,p_plug_display_sequence=>10
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'REGION_POSITION_01'
+,p_menu_id=>wwv_flow_api.id(53916836124328860051)
+,p_plug_source_type=>'NATIVE_BREADCRUMB'
+,p_menu_template_id=>wwv_flow_api.id(335259230270312366)
+,p_plug_query_row_template=>1
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(17927044036195674672)
+,p_plug_name=>'Wstępniak'
+,p_region_template_options=>'#DEFAULT#:t-Region--hiddenOverflow'
+,p_escape_on_http_output=>'Y'
+,p_plug_template=>wwv_flow_api.id(335216837663312150)
+,p_plug_display_sequence=>20
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'BODY'
+,p_plug_query_row_template=>1
+,p_plug_query_num_rows=>15
+,p_attribute_01=>'N'
+,p_attribute_02=>'HTML'
+,p_attribute_03=>'Y'
+);
+wwv_flow_api.create_page_plug(
+ p_id=>wwv_flow_api.id(17927705859924518361)
+,p_plug_name=>'Newsletters'
+,p_region_template_options=>'#DEFAULT#'
+,p_plug_template=>wwv_flow_api.id(335215746832312141)
+,p_plug_display_sequence=>30
+,p_include_in_reg_disp_sel_yn=>'N'
+,p_plug_display_point=>'BODY'
+,p_plug_source=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+'select ID,',
+'       TEXT,',
+'       DODAL,',
+'       DATA_DODANIA',
+'  from GL_NEWSLETTER'))
+,p_plug_source_type=>'NATIVE_IR'
+,p_plug_query_row_template=>1
+,p_plug_query_show_nulls_as=>' - '
+,p_pagination_display_position=>'BOTTOM_RIGHT'
+);
+wwv_flow_api.create_worksheet(
+ p_id=>wwv_flow_api.id(17927705952722518361)
+,p_name=>'Newsletters'
+,p_max_row_count=>'1000000'
+,p_max_row_count_message=>'The maximum row count for this report is #MAX_ROW_COUNT# rows.  Please apply a filter to reduce the number of records in your query.'
+,p_no_data_found_message=>'No data found.'
+,p_allow_report_categories=>'N'
+,p_show_nulls_as=>'-'
+,p_pagination_type=>'ROWS_X_TO_Y'
+,p_pagination_display_pos=>'BOTTOM_RIGHT'
+,p_report_list_mode=>'TABS'
+,p_show_detail_link=>'N'
+,p_show_calendar=>'N'
+,p_download_formats=>'CSV:HTML:EMAIL:XLS:PDF:RTF'
+,p_detail_link_text=>'<img src="#IMAGE_PREFIX#menu/pencil16x16.gif" alt="" />'
+,p_icon_view_columns_per_row=>1
+,p_owner=>'ARACZKOWSKI@GMAIL.COM'
+,p_internal_uid=>17927705952722518361
+);
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(17927706248819518376)
+,p_db_column_name=>'ID'
+,p_display_order=>1
+,p_column_identifier=>'A'
+,p_column_label=>'Id'
+,p_column_type=>'NUMBER'
+,p_column_alignment=>'RIGHT'
+,p_tz_dependent=>'N'
+);
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(17927706611204518377)
+,p_db_column_name=>'TEXT'
+,p_display_order=>2
+,p_column_identifier=>'B'
+,p_column_label=>'Text'
+,p_allow_sorting=>'N'
+,p_allow_ctrl_breaks=>'N'
+,p_allow_aggregations=>'N'
+,p_allow_computations=>'N'
+,p_allow_charting=>'N'
+,p_allow_group_by=>'N'
+,p_allow_pivot=>'N'
+,p_column_type=>'CLOB'
+,p_display_text_as=>'WITHOUT_MODIFICATION'
+,p_tz_dependent=>'N'
+,p_rpt_show_filter_lov=>'N'
+);
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(17927707077881518377)
+,p_db_column_name=>'DODAL'
+,p_display_order=>3
+,p_column_identifier=>'C'
+,p_column_label=>'Dodal'
+,p_column_type=>'STRING'
+,p_tz_dependent=>'N'
+);
+wwv_flow_api.create_worksheet_column(
+ p_id=>wwv_flow_api.id(17927707440629518378)
+,p_db_column_name=>'DATA_DODANIA'
+,p_display_order=>4
+,p_column_identifier=>'D'
+,p_column_label=>'Data Dodania'
+,p_column_type=>'DATE'
+,p_tz_dependent=>'N'
+);
+wwv_flow_api.create_worksheet_rpt(
+ p_id=>wwv_flow_api.id(17927711931459685960)
+,p_application_user=>'APXWS_DEFAULT'
+,p_report_seq=>10
+,p_report_alias=>'179277120'
+,p_status=>'PUBLIC'
+,p_is_default=>'Y'
+,p_display_rows=>50
+,p_report_columns=>'ID:TEXT:DODAL:DATA_DODANIA'
+,p_flashback_enabled=>'N'
+);
+wwv_flow_api.create_page_button(
+ p_id=>wwv_flow_api.id(17930813162224581450)
+,p_button_sequence=>10
+,p_button_plug_id=>wwv_flow_api.id(17927044036195674672)
+,p_button_name=>'CREATE'
+,p_button_action=>'SUBMIT'
+,p_button_template_options=>'#DEFAULT#:t-Button--iconLeft:t-Button--large:t-Button--warning'
+,p_button_template_id=>wwv_flow_api.id(335258574839312359)
+,p_button_is_hot=>'Y'
+,p_button_image_alt=>'Dodaj / Wyślij'
+,p_button_position=>'BOTTOM'
+,p_button_alignment=>'LEFT'
+,p_icon_css_classes=>'fa-envelope-o'
+,p_grid_new_grid=>false
+,p_grid_new_row=>'N'
+,p_grid_new_column=>'N'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(17930674875827550204)
+,p_name=>'P12_WSTEPNIAK'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(17927044036195674672)
+,p_post_element_text=>'<br>'
+,p_display_as=>'NATIVE_RICH_TEXT_EDITOR'
+,p_cSize=>100
+,p_cMaxlength=>4000
+,p_cHeight=>20
+,p_label_alignment=>'RIGHT'
+,p_field_alignment=>'LEFT-CENTER'
+,p_lov_display_extra=>'YES'
+,p_attribute_01=>'CKEDITOR3'
+,p_attribute_02=>'Intermediate'
+,p_attribute_03=>'Y'
+,p_attribute_04=>'moonocolor'
+,p_attribute_05=>'top'
+);
+wwv_flow_api.create_page_validation(
+ p_id=>wwv_flow_api.id(17932263150956727186)
+,p_validation_name=>'P12_WSTEPNIAK'
+,p_validation_sequence=>10
+,p_validation=>'P12_WSTEPNIAK'
+,p_validation_type=>'ITEM_NOT_NULL'
+,p_error_message=>'Momencik, nie tak szybko Mikołaju &APP_USER.! Wstępniak trzeba dodać!'
+,p_always_execute=>'N'
+,p_when_button_pressed=>wwv_flow_api.id(17930813162224581450)
+,p_only_for_changed_rows=>'Y'
+,p_associated_item=>wwv_flow_api.id(17930674875827550204)
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+);
+wwv_flow_api.create_page_process(
+ p_id=>wwv_flow_api.id(17931289271531625449)
+,p_process_sequence=>10
+,p_process_point=>'AFTER_SUBMIT'
+,p_process_type=>'NATIVE_PLSQL'
+,p_process_name=>'send newsletter'
+,p_process_sql_clob=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+'begin',
+'insert into GL_NEWSLETTER(TEXT, DODAL, DATA_DODANIA)',
+'values (:P12_WSTEPNIAK, :APP_USER, sysdate);',
+'',
+'GL_UTILS.send_daily_newsleter;',
+'end;'))
+,p_error_display_location=>'INLINE_IN_NOTIFICATION'
+,p_process_when_button_id=>wwv_flow_api.id(17930813162224581450)
+,p_process_success_message=>'Wysłałeś newsletter do wszyściutkich!!!'
 );
 end;
 /
