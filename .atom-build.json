@@ -1,0 +1,17 @@
+{
+    "cmd": "/usr/local/bin/atom_compileOracle.sh",
+    "name": "Build Oracle code file",
+    "args": ["${host}", "${port}", "${sid}", "${user}", "${password}", "{FILE_ACTIVE}"],
+    "sh": true,
+    "cwd": "{FILE_ACTIVE_PATH}",
+    "env": {
+        "user": "hr",
+        "password": "hr",
+        "host": "example.com",
+        "port": "1521",
+        "sid": "XE"
+    },
+    "errorMatch": [],
+    "keymap": "",
+    "targets": {}
+}
