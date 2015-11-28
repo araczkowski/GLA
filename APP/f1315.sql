@@ -27,7 +27,7 @@ prompt APPLICATION 1315 - Gift List App
 -- Application Export:
 --   Application:     1315
 --   Name:            Gift List App
---   Date and Time:   21:36 Thursday November 26, 2015
+--   Date and Time:   14:18 Saturday November 28, 2015
 --   Exported By:     ARACZKOWSKI@GMAIL.COM
 --   Flashback:       0
 --   Export Type:     Application Export
@@ -37,7 +37,7 @@ prompt APPLICATION 1315 - Gift List App
 
 -- Application Statistics:
 --   Pages:                     18
---     Items:                   63
+--     Items:                   64
 --     Computations:             5
 --     Validations:              7
 --     Processes:               32
@@ -122,7 +122,7 @@ wwv_flow_api.create_flow(
 ,p_auto_time_zone=>'N'
 ,p_default_error_display_loc=>'INLINE_IN_NOTIFICATION'
 ,p_last_updated_by=>'ARACZKOWSKI@GMAIL.COM'
-,p_last_upd_yyyymmddhh24miss=>'20151126212657'
+,p_last_upd_yyyymmddhh24miss=>'20151127144814'
 ,p_email_from=>'info@sviete.pl'
 ,p_file_prefix => nvl(wwv_flow_application_install.get_static_app_file_prefix,'')
 ,p_files_version=>3
@@ -22303,8 +22303,8 @@ wwv_flow_api.create_page(
 ,p_page_is_public_y_n=>'N'
 ,p_cache_mode=>'NOCACHE'
 ,p_help_text=>'No help is available for this page.'
-,p_last_updated_by=>'ANDRZEJ'
-,p_last_upd_yyyymmddhh24miss=>'20151121230352'
+,p_last_updated_by=>'ARACZKOWSKI@GMAIL.COM'
+,p_last_upd_yyyymmddhh24miss=>'20151127144814'
 );
 wwv_flow_api.create_page_plug(
  p_id=>wwv_flow_api.id(17925689253064654049)
@@ -22479,21 +22479,41 @@ wwv_flow_api.create_page_branch(
 wwv_flow_api.create_page_item(
  p_id=>wwv_flow_api.id(17930674875827550204)
 ,p_name=>'P12_WSTEPNIAK'
-,p_item_sequence=>10
+,p_item_sequence=>20
 ,p_item_plug_id=>wwv_flow_api.id(17927044036195674672)
 ,p_post_element_text=>'<br>'
 ,p_display_as=>'NATIVE_RICH_TEXT_EDITOR'
 ,p_cSize=>100
 ,p_cMaxlength=>4000
 ,p_cHeight=>20
-,p_label_alignment=>'RIGHT'
-,p_field_alignment=>'LEFT-CENTER'
-,p_lov_display_extra=>'YES'
 ,p_attribute_01=>'CKEDITOR3'
 ,p_attribute_02=>'Intermediate'
 ,p_attribute_03=>'Y'
 ,p_attribute_04=>'moonocolor'
 ,p_attribute_05=>'top'
+);
+wwv_flow_api.create_page_item(
+ p_id=>wwv_flow_api.id(18580348387740853509)
+,p_name=>'P12_EVENT'
+,p_item_sequence=>10
+,p_item_plug_id=>wwv_flow_api.id(17927044036195674672)
+,p_prompt=>'Impreza'
+,p_source=>'1'
+,p_source_type=>'STATIC'
+,p_display_as=>'NATIVE_SELECT_LIST'
+,p_named_lov=>'LV_IMPREZY'
+,p_lov=>wwv_flow_utilities.join(wwv_flow_t_varchar2(
+'select nazwa as d,',
+'       id as r',
+'  from GL_EVENTS',
+' order by data desc'))
+,p_cHeight=>1
+,p_read_only_when_type=>'ALWAYS'
+,p_field_template=>wwv_flow_api.id(335257999627312320)
+,p_item_template_options=>'#DEFAULT#'
+,p_lov_display_extra=>'NO'
+,p_attribute_01=>'NONE'
+,p_attribute_02=>'N'
 );
 wwv_flow_api.create_page_validation(
  p_id=>wwv_flow_api.id(17932263150956727186)
@@ -22528,7 +22548,7 @@ wwv_flow_api.create_page_process(
 'insert into GL_NEWSLETTER(TEXT, DODAL, DATA_DODANIA)',
 'values (:P12_WSTEPNIAK, :APP_USER, sysdate);',
 '',
-'GL_UTILS.send_daily_newsleter;',
+'GL_UTILS.send_daily_newsleter(:P12_EVENT);',
 'end;'))
 ,p_error_display_location=>'INLINE_IN_NOTIFICATION'
 ,p_process_when_button_id=>wwv_flow_api.id(17930813162224581450)
