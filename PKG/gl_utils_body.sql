@@ -159,7 +159,8 @@ create or replace PACKAGE BODY GL_UTILS AS
 
   --
   FUNCTION get_daily_newsleter(p_day   DATE
-                              ,p_login VARCHAR2) RETURN CLOB IS
+                              ,p_login VARCHAR2
+                              ,p_event_id number) RETURN CLOB IS
     l_body       CLOB;
     l_wstepniak  CLOB;
     l_time_line  CLOB;
@@ -205,7 +206,8 @@ create or replace PACKAGE BODY GL_UTILS AS
                               ,'color: #3c763d; background-color: #dff0d8;border-color: #d6e9c6;' style_
                           FROM gift_list  gl
                               ,gl_comment c
-                         WHERE trunc(c.data_dodania) = trunc(p_day - 1)
+                         WHERE gl.IMPREZA_ID = p_event_id
+                           AND trunc(c.data_dodania) = trunc(p_day - 1)
                            AND c.POMYSL_ID = gl.id
                            AND (gl.prezent_dla != p_login OR gl.dodal = p_login)
                         UNION
@@ -224,7 +226,8 @@ create or replace PACKAGE BODY GL_UTILS AS
                               ,'#POMYSŁ'
                               ,'color: #8a6d3b; background-color: #fcf8e3;border-color:#faebcc;' style_
                           FROM gift_list gl
-                         WHERE trunc(gl.data_dodania) = trunc(p_day - 1)
+                         WHERE gl.IMPREZA_ID = p_event_id
+                           AND trunc(gl.data_dodania) = trunc(p_day - 1)
                            AND (gl.prezent_dla != p_login OR gl.dodal = p_login))
                  ORDER BY data_dodania)
     LOOP
@@ -239,14 +242,14 @@ create or replace PACKAGE BODY GL_UTILS AS
                      '<span style="font-size:medium; font-weight:bold"> @' ||
                      initcap(rec.dodal) ||
                      '</span><br><span style="font-style: italic; font-size: medium;">' ||
-                     rec.tekst || '<span></div>';
+                     rec.tekst || '</span></div>';
     END LOOP;
 
     --
     SELECT trunc(e.data) - trunc(SYSDATE)
       INTO l_dni
       FROM gl_events e
-     WHERE nazwa = 'PreWIGILIA 2015';
+     WHERE id = p_event_id;
 
     --
 
@@ -258,7 +261,7 @@ create or replace PACKAGE BODY GL_UTILS AS
     FOR rec IN (SELECT gl.dodal
                       ,COUNT(1) ile
                   FROM gift_list gl
-                 WHERE impreza_id = 1
+                 WHERE impreza_id = p_event_id
                  GROUP BY gl.dodal
                  ORDER BY 2 DESC)
     LOOP
@@ -272,11 +275,12 @@ create or replace PACKAGE BODY GL_UTILS AS
     -- KOMENTARZE
     l_top_list := l_top_list || '<br><li>Komentarze';
     l_top_list := l_top_list || '<ol>';
-    FOR rec IN (SELECT c.dodal
-                      ,COUNT(1) ile
-                  FROM gl_comment c
-                 GROUP BY c.dodal
-                 ORDER BY 2 DESC)
+    FOR rec IN (SELECT c.dodal,COUNT(1) ile
+                    FROM gl_comment c, gift_list gl
+                    where gl.id = c.pomysl_id
+                    and gl.impreza_id = p_event_id
+                    GROUP BY c.dodal
+                    ORDER BY 2 DESC)
     LOOP
 
       l_top_list := l_top_list || '<li>' || rec.dodal || ' => ' || rec.ile ||
@@ -291,6 +295,7 @@ create or replace PACKAGE BODY GL_UTILS AS
     FOR rec IN (SELECT n.dodal
                       ,COUNT(1) ile
                   FROM gl_newsletter n
+                  where length(n.text) > 1
                  GROUP BY n.dodal
                  ORDER BY 2 DESC)
     LOOP
@@ -321,7 +326,7 @@ create or replace PACKAGE BODY GL_UTILS AS
 
     l_body := l_body ||
               '<p>#<span style="font-weight:bolder; color:red">WSTĘPNIAK</span> <b>@' ||
-              v('APP_USER');
+              v('APP_USER')||'</b></p>';
     l_body := l_body || '<p>' || l_wstepniak || '</p>';
     l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
 
@@ -331,28 +336,32 @@ create or replace PACKAGE BODY GL_UTILS AS
     l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
 
     l_body := l_body ||
-              '<p>#<span style="font-weight:bolder; color:red">Mikołaj''s toplist:</span><div style="">' ||
+              '<p>#<span style="font-weight:bolder; color:red">Mikołaj''s toplist:</span></p><div>' ||
               l_top_list || '</div>';
     l_body := l_body || '<br><br><hr style="border-top: dotted 1px;" />';
 
     l_body := l_body ||
-              '<a style="font-size: small;" href="https://apex.oracle.com/pls/apex/f?p=GLA">Santa v2015 system</a>';
+              '<a style="font-size: small;" href="https://apex.oracle.com/pls/apex/f?p=GLA">Santa v2015 system</a></div>';
 
     RETURN l_body;
   END;
 
   --
-  PROCEDURE send_daily_newsleter IS
+  PROCEDURE send_daily_newsleter(p_event_id number) IS
     l_body CLOB;
   BEGIN
 
-    FOR rec IN (SELECT *
-                  FROM gl_users
-                 WHERE newsletter = 1)
+    FOR rec IN (SELECT distinct u.email, u.login
+                 FROM gl_users u,
+                  gl_events_users eu
+                WHERE u.id = eu.user_id
+                and u.newsletter = 1
+                and eu.event_id = 1)
     LOOP
 
       l_body := get_daily_newsleter(SYSDATE
-                                   ,rec.login);
+                                   ,rec.login
+                                   ,p_event_id);
 
       SEND_MAIL(rec.email
                ,'info@sviete.pl'

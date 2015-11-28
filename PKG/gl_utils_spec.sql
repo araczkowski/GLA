@@ -17,9 +17,10 @@ create or replace PACKAGE GL_UTILS AS
   PROCEDURE add_comments(p_gl_id   NUMBER
                         ,p_comment VARCHAR2);
 
-  PROCEDURE send_daily_newsleter;
+  PROCEDURE send_daily_newsleter(p_event_id number);
 
   FUNCTION get_daily_newsleter(p_day   DATE
-                              ,p_login VARCHAR2) RETURN CLOB;
+                              ,p_login VARCHAR2
+                              ,p_event_id number) RETURN CLOB;
 
 END;
