@@ -23,4 +23,11 @@ create or replace PACKAGE GL_UTILS AS
                               ,p_login VARCHAR2
                               ,p_event_id number) RETURN CLOB;
 
+
+  FUNCTION get_invitation_topic(p_event_id number) RETURN CLOB;
+  FUNCTION get_invitation_body(p_event_id number, p_user_id number default null) RETURN CLOB;
+  FUNCTION confirm_the_invitation(p_event_id number,
+                                  p_user_id number,
+                                  p_answer varchar2) RETURN CLOB;
+  PROCEDURE send_invitations(p_event_id number);
 END;

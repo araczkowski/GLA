@@ -356,7 +356,7 @@ create or replace PACKAGE BODY GL_UTILS AS
                   gl_events_users eu
                 WHERE u.id = eu.user_id
                 and u.newsletter = 1
-                and eu.event_id = 1)
+                and eu.event_id = p_event_id)
     LOOP
 
       l_body := get_daily_newsleter(SYSDATE
@@ -375,5 +375,123 @@ create or replace PACKAGE BODY GL_UTILS AS
     END LOOP;
 
   END;
+
+  FUNCTION get_invitation_topic(p_event_id number) RETURN CLOB IS
+      l_event_name varchar2(4000);
+      l_data varchar2(4000);
+  BEGIN
+      select nazwa, to_char(data,'DD Month YYYY hh24:mi') into l_event_name, l_data from gl_events where id = p_event_id;
+
+      return 'Cześć, co powiesz na '||l_event_name||' w dniu '||l_data ||'?';
+  END;
+
+  --
+  FUNCTION get_invitation_body(p_event_id number, p_user_id number default null) RETURN CLOB IS
+      l_opis varchar2(4000);
+      l_organizator varchar2(4000);
+      l_event_name varchar2(4000);
+      l_data varchar2(4000);
+      l_clob clob;
+      l_id number;
+  BEGIN
+   select opis, organizator,nazwa, to_char(data,'DD Month YYYY hh24:mi')
+           into l_opis, l_organizator,l_event_name, l_data
+          from gl_events where id = p_event_id;
+
+  if p_user_id is not null then
+   select eu.id into l_id from gl_events_users eu
+   where eu.event_id = p_event_id
+   and eu.user_id = p_user_id;
+ end if;
+
+   l_clob := '<meta http-equiv="Content-Type"  content="text/html charset=UTF-8" />';
+   l_clob := l_clob || '<table cellspacing="0" cellpadding="8" border="0" summary="" style="width:100%;font-family:Arial,Sans-serif;border:1px Solid #ccc;border-width:1px 2px 2px 1px;background-color:#fff">';
+   l_clob := l_clob || '<tbody><tr><td><div style="padding:2px">';
+   l_clob := l_clob || '<h3 style="padding:0 0 6px 0;margin:0;font-family:Arial,Sans-serif;font-size:16px;font-weight:bold;color:#222">';
+   l_clob := l_clob || '<span style="color:red">#'||l_event_name||'</span></h3>';
+   l_clob := l_clob || '<hr style="border-top: dotted 1px;" />';
+   l_clob := l_clob || '<div style="padding-bottom:15px;font-size:13px;color:#222;white-space:pre-wrap!important;white-space:-moz-pre-wrap!important;white-space:-pre-wrap!important;white-space:-o-pre-wrap!important;white-space:pre-wrap;word-wrap:break-word">';
+   l_clob := l_clob || '<p>'||l_opis||'</p></div>';
+   l_clob := l_clob || '<hr style="border-top: dotted 1px;" />';
+   l_clob := l_clob || '<table cellpadding="0" cellspacing="0" border="0" summary="Event details">';
+   l_clob := l_clob || '<tbody><tr>
+                                   <td style="padding:0 1em 10px 0;font-family:Arial,Sans-serif;font-size:13px;color:#888;white-space:nowrap" valign="top">
+                                       <div><i style="font-style:normal">Kiedy</i></div>
+                                   </td>
+                                   <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top"><u></u><u></u><u></u><u></u>'||l_data||
+                                   '</td>
+                               </tr>
+                               <tr>
+                                   <td style="padding:0 1em 10px 0;font-family:Arial,Sans-serif;font-size:13px;color:#888;white-space:nowrap" valign="top">
+                                       <div><i style="font-style:normal">Gdzie</i></div>
+                                   </td>
+                                   <td style="padding-bottom:10px;font-family:Arial,Sans-serif;font-size:13px;color:#222" valign="top">
+                                       <span>
+                                           <span>Szczepanów Średzka 18</span>
+                                       </span>
+                                   </td>
+                               </tr>
+
+                           </tbody>
+                       </table>
+                   </div>
+                   <p style="color:#222;font-size:13px;margin:0">
+                       <span style="color:#888">Będziesz?&nbsp;&nbsp;&nbsp;</span>
+                       <strong><a href="https://apex.oracle.com/pls/apex/f?p=GLA:CONFIRM:::::P16_ID,P16_ANSWER:'||l_id||',YES"
+                           style="color:#20c;white-space:nowrap" target="_blank">Tak  +10 :D</a>
+                           <span style="margin:0 0.4em;font-weight:normal"> - </span><a href="https://apex.oracle.com/pls/apex/f?p=GLA:CONFIRM:::::P16_ID,P16_ANSWER:'||l_id||',MAYBE"
+                           style="color:#20c;white-space:nowrap" target="_blank">Może :|</a>
+                           <span style="margin:0 0.4em;font-weight:normal"> - </span><a href="https://apex.oracle.com/pls/apex/f?p=GLA:CONFIRM:::::P16_ID,P16_ANSWER:'||l_id||',NO"
+                           style="color:#20c;white-space:nowrap" target="_blank">Nie -1000 ;(</a></strong>&nbsp;&nbsp;&nbsp;&nbsp;
+                     </p>
+               </td>
+           </tr>
+           <tr>
+               <td style="background-color:#f6f6f6;color:#888;border-top:1px Solid #ccc;font-family:Arial,Sans-serif; text-align: right;">
+                   <a target="_blank" style="font-size: 8px;" href="https://apex.oracle.com/pls/apex/f?p=GLA">Santa v2015 system</a>
+               </td>
+           </tr>
+       </tbody>
+   </table>';
+
+
+
+
+   return l_clob;
+  END;
+
+  FUNCTION confirm_the_invitation(p_event_id number,
+                                  p_user_id number,
+                                  p_answer varchar2) RETURN CLOB  IS
+  BEGIN
+  null;
+  END;
+
+  PROCEDURE send_invitations(p_event_id number) is
+    l_body clob;
+    l_topic varchar2(2000);
+  begin
+
+   l_topic := get_invitation_topic(p_event_id);
+
+   FOR rec IN (SELECT distinct u.email, u.login, u.id
+                 FROM gl_users u,
+                  gl_events_users eu
+                WHERE u.id = eu.user_id
+                and eu.INVITATION_STATUS = 'Zaplanowane'
+                and eu.event_id = p_event_id) loop
+
+      l_body := get_invitation_body(p_event_id, rec.id);
+
+      SEND_MAIL(rec.email
+               ,'info@sviete.pl'
+               ,l_topic
+               ,l_body);
+      --
+      update gl_events_users eu set eu.INVITATION_STATUS = 'Zaproszenie wysłane'
+      where eu.user_id = rec.id and eu.event_id = p_event_id;
+
+   end loop;
+  end;
 
 END;

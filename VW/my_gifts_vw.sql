@@ -17,7 +17,7 @@ SELECT decode(gle.status,'REZ','',decode(v('APP_USER'), gl.dodal, '<a href="f?p=
                gl.mimetype,
                gl.filename,
                gl.prezent_dla,
-               decode(v('APP_USER'), gl.zarezerwowal, apex_item.checkbox2(p_idx => 1, p_value => gl.kupione, p_attributes => decode(gl.kupione,'T','CHECKED','UNCHECKED')|| ' onchange="apex.event.trigger(document, ''kupione'', ''' ||gl.rowid||'''); void(0);"'), '') kupione,
+               decode(upper(v('APP_USER')), upper(gl.zarezerwowal), apex_item.checkbox2(p_idx => 1, p_value => gl.kupione, p_attributes => decode(gl.kupione,'T','CHECKED','UNCHECKED')|| ' onchange="apex.event.trigger(document, ''kupione'', ''' ||gl.rowid||'''); void(0);"'), '') kupione,
                gle.status
 FROM gift_list gl
 LEFT OUTER JOIN gl_events gle ON gl.impreza_id = gle.id
@@ -29,18 +29,18 @@ WHERE (gle.id IS NOT NULL --
                  gl_users u
             WHERE eu.user_id = u.id
                 AND eu.event_id = gle.id
-                AND u.login = :APP_USER)--
+                AND upper(u.login) = upper(:APP_USER))--
  /*zakonczone*/
        AND ((gle.status = 'KON'
-             AND gl.dodal = :APP_USER
+             AND upper(gl.dodal) = upper(:APP_USER)
              AND gl.zarezerwowal IS NULL)--
  /* rezerwacja */
             OR (gle.status = 'REZ'
                 AND prezent_dla != :APP_USER
-                AND nvl(zarezerwowal,:APP_USER) = :APP_USER)--
+                AND nvl(upper(zarezerwowal),upper(:APP_USER)) = upper(:APP_USER))--
  /*planowanie*/
             OR (gle.status = 'ZGL'
-                AND (dodal = :APP_USER
-                     OR prezent_dla != :APP_USER))))
+                AND (upper(dodal) = upper(:APP_USER)
+                     OR upper(prezent_dla) != upper(:APP_USER)))))
     OR (gle.id IS NULL
-        AND dodal = :APP_USER)
+        AND upper(dodal) = upper(:APP_USER))
