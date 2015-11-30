@@ -18,7 +18,7 @@ create or replace PACKAGE BODY GL_UTILS AS
   BEGIN
     begin
         select id into l_INVITED_BY_id from
-        gl_users where login = v('APP_USER');
+        gl_users where upper(login) = upper(v('APP_USER'));
     exception when others then
         l_INVITED_BY_id := null;
     end;
@@ -26,7 +26,7 @@ create or replace PACKAGE BODY GL_UTILS AS
     l_web_password := to_char(systimestamp
                              ,'yyyymmddhh24missff');
 
-    APEX_UTIL.CREATE_USER(p_user_name                    => p_user_name
+    APEX_UTIL.CREATE_USER(p_user_name                    => upper(p_user_name)
                          ,p_first_name                   => p_first_name
                          ,p_last_name                    => p_last_name
                          ,p_email_address                => p_email_address
@@ -47,7 +47,7 @@ create or replace PACKAGE BODY GL_UTILS AS
       ,email_hash
       ,INVITED_BY)
     VALUES
-      (p_user_name
+      (upper(p_user_name)
       ,lower(p_email_address)
       ,p_first_name
       ,p_last_name
